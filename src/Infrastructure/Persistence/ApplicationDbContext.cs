@@ -35,6 +35,14 @@ namespace Ing.Interview.Infrastructure.Persistence
 
         public DbSet<TodoList> TodoLists { get; set; }
 
+        public DbSet<Account> AccountsDbSet { get; set; }
+
+        public DbSet<Transaction> TodoListsDbSet { get; set; }
+
+        public IStorage<Account> Accounts => new Storage<Account>(AccountsDbSet);
+
+        public IStorage<Transaction> Transactions => new Storage<Transaction>(TodoListsDbSet);
+
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
             foreach (Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<AuditableEntity> entry in ChangeTracker.Entries<AuditableEntity>())

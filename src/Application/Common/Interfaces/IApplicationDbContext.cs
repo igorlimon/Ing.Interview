@@ -11,6 +11,10 @@ namespace Ing.Interview.Application.Common.Interfaces
 
         DbSet<TodoItem> TodoItems { get; set; }
 
+        IStorage<Account> Accounts { get; }
+
+        IStorage<Transaction> Transactions { get; }
+
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }
