@@ -4,15 +4,13 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Ing.Interview.Infrastructure.Persistence.Configurations
 {
-    public class TodoItemConfiguration : IEntityTypeConfiguration<TodoItem>
+    public class AccountConfiguration : IEntityTypeConfiguration<Account>
     {
-        public void Configure(EntityTypeBuilder<TodoItem> builder)
+        public void Configure(EntityTypeBuilder<Account> builder)
         {
             builder.Ignore(e => e.DomainEvents);
-
-            builder.Property(t => t.Title)
-                .HasMaxLength(200)
-                .IsRequired();
+            builder.OwnsOne(b => b.Currency);
+            builder.ToTable(nameof(Account));
         }
     }
 }

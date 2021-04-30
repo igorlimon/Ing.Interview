@@ -1,47 +1,44 @@
 ﻿using Ing.Interview.Application.Common.Interfaces;
 using Ing.Interview.Domain.Common;
 using Ing.Interview.Domain.Entities;
-using Ing.Interview.Infrastructure.Identity;
-using IdentityServer4.EntityFramework.Options;
-using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
 namespace Ing.Interview.Infrastructure.Persistence
 {
-    public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, IApplicationDbContext
+    public class ApplicationDbContext : DbContext, IApplicationDbContext
     {
-        private readonly ICurrentUserService _currentUserService;
         private readonly IDateTime _dateTime;
         private readonly IDomainEventService _domainEventService;
+        private readonly IConfiguration _configuration;
+
+
+        public ApplicationDbContext(
+            DbContextOptions options) : base(options)
+        {
+        }
 
         public ApplicationDbContext(
             DbContextOptions options,
-            IOptions<OperationalStoreOptions> operationalStoreOptions,
-            ICurrentUserService currentUserService,
             IDomainEventService domainEventService,
-            IDateTime dateTime) : base(options, operationalStoreOptions)
+            IDateTime dateTime, IConfiguration configuration) : this(options)
         {
-            _currentUserService = currentUserService;
             _domainEventService = domainEventService;
+            _configuration = configuration;
             _dateTime = dateTime;
         }
 
-        public DbSet<TodoItem> TodoItems { get; set; }
-
-        public DbSet<TodoList> TodoLists { get; set; }
-
         public DbSet<Account> AccountsDbSet { get; set; }
 
-        public DbSet<Transaction> TodoListsDbSet { get; set; }
+        public DbSet<Transaction> TransactionsDbSet { get; set; }
 
         public IStorage<Account> Accounts => new Storage<Account>(AccountsDbSet);
 
-        public IStorage<Transaction> Transactions => new Storage<Transaction>(TodoListsDbSet);
+        public IStorage<Transaction> Transactions => new Storage<Transaction>(TransactionsDbSet);
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
@@ -50,12 +47,12 @@ namespace Ing.Interview.Infrastructure.Persistence
                 switch (entry.State)
                 {
                     case EntityState.Added:
-                        entry.Entity.CreatedBy = _currentUserService.UserId;
+                        entry.Entity.CreatedBy = "admin";
                         entry.Entity.Created = _dateTime.Now;
                         break;
 
                     case EntityState.Modified:
-                        entry.Entity.LastModifiedBy = _currentUserService.UserId;
+                        entry.Entity.LastModifiedBy = "admin";
                         entry.Entity.LastModified = _dateTime.Now;
                         break;
                 }
@@ -71,8 +68,22 @@ namespace Ing.Interview.Infrastructure.Persistence
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-
             base.OnModelCreating(builder);
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+            if (_configuration.GetValue<bool>("UseInMemoryDatabase"))
+            {
+                optionsBuilder.UseInMemoryDatabase("Ing.InterviewDb");
+            }
+            else
+            {
+                optionsBuilder.UseSqlServer(
+                        _configuration.GetConnectionString("DefaultConnection"),
+                        b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName));
+            }
         }
 
         private async Task DispatchEvents()

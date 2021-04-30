@@ -1,7 +1,5 @@
 ﻿using Ing.Interview.Domain.Entities;
 using Ing.Interview.Domain.ValueObjects;
-using Ing.Interview.Infrastructure.Identity;
-using Microsoft.AspNetCore.Identity;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,44 +7,18 @@ namespace Ing.Interview.Infrastructure.Persistence
 {
     public static class ApplicationDbContextSeed
     {
-        public static async Task SeedDefaultUserAsync(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
-        {
-            var administratorRole = new IdentityRole("Administrator");
-
-            if (roleManager.Roles.All(r => r.Name != administratorRole.Name))
-            {
-                await roleManager.CreateAsync(administratorRole);
-            }
-
-            var administrator = new ApplicationUser { UserName = "administrator@localhost", Email = "administrator@localhost" };
-
-            if (userManager.Users.All(u => u.UserName != administrator.UserName))
-            {
-                await userManager.CreateAsync(administrator, "Administrator1!");
-                await userManager.AddToRolesAsync(administrator, new [] { administratorRole.Name });
-            }
-        }
-
         public static async Task SeedSampleDataAsync(ApplicationDbContext context)
         {
             // Seed, if necessary
-            if (!context.TodoLists.Any())
+            if (!context.Accounts.Any())
             {
-                context.TodoLists.Add(new TodoList
+                context.Accounts.Add(new Account()
                 {
-                    Title = "Shopping",
-                    Colour = Colour.Blue,
-                    Items =
-                    {
-                        new TodoItem { Title = "Apples", Done = true },
-                        new TodoItem { Title = "Milk", Done = true },
-                        new TodoItem { Title = "Bread", Done = true },
-                        new TodoItem { Title = "Toilet paper" },
-                        new TodoItem { Title = "Pasta" },
-                        new TodoItem { Title = "Tissues" },
-                        new TodoItem { Title = "Tuna" },
-                        new TodoItem { Title = "Water" }
-                    }
+                    Currency = Currency.EUR,
+                    Iban = "NL69INGB0123456789",
+                    Product = "Betaalrekening",
+                    ResourceId = "450ffbb8-9f11-4ec6-a1e1-df48aefc82ef",
+                    Name = "Hr A van Dijk , Mw B Mol-van Dijk"
                 });
 
                 await context.SaveChangesAsync();

@@ -26,7 +26,7 @@ namespace Ing.Interview.Domain.ValueObjects
 
             if (!SupportedCurrency.Contains(colour))
             {
-                throw new UnsupportedColourException(code);
+                throw new UnsupportedCurrencyException(code);
             }
 
             return colour;

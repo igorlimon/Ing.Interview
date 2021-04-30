@@ -7,7 +7,7 @@ namespace Ing.Interview.Application.Common.Interfaces
     ///     Wrapper interface over Entity Framework DbSet responsible to store objects of the type {T}.
     /// </summary>
     /// <typeparam name="T">The type of the object being saved in the database.</typeparam>
-    public interface IStorage<T> : IQueryable<T>
+    public interface IStorage<T> : IQueryable<T>, IAsyncEnumerable<T>
     {
         /// <summary>
         ///     Begins tracking the given entities that they will be inserted into the database when

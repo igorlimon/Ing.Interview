@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+  webui:
+    image: ${DOCKER_REGISTRY-}webui
+    build:
+      context: .
+      dockerfile: src\WebUI\Dockerfile
+    depends_on:
+        - db
+  db:
+    image: "microsoft/mssql-server-windows-developer"
+    environment:
+        SA_PASSWORD: "Your_password123"
+        ACCEPT_EULA: "Y"

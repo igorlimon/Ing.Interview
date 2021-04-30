@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Ing.Interview.Domain.Common;
 using Ing.Interview.Domain.ValueObjects;
 
@@ -6,6 +7,12 @@ namespace Ing.Interview.Domain.Entities
 {
     public class Account : AuditableEntity, IHasDomainEvent
     {
+        public Account()
+        {
+            DomainEvents = new List<DomainEvent>();
+        }
+
+        public Guid AccountId { get; set; }
         public string ResourceId { get; set; }
         public string Product { get; set; }
         public string Iban { get; set; }

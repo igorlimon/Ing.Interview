@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using Ing.Interview.Application.Common.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -70,5 +71,10 @@ namespace Ing.Interview.Infrastructure.Persistence
 
         /// <inheritdoc />
         public IQueryProvider Provider => _data.AsQueryable().Provider;
+
+        public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
+        {
+            return _data.AsAsyncEnumerable().GetAsyncEnumerator(cancellationToken);
+        }
     }
 }
