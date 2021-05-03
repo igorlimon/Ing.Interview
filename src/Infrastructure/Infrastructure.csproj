@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="3rdPartyApi\Ing\Scripts\certs\" />
     <Folder Include="Persistence\Migrations\" />
   </ItemGroup>
 
