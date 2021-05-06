@@ -9,9 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using NSwag;
-using NSwag.Generation.Processors.Security;
-using System.Linq;
+using Microsoft.OpenApi.Models;
 
 namespace Ing.Interview.WebUI
 {
@@ -30,12 +28,7 @@ namespace Ing.Interview.WebUI
             services.AddApplication();
             services.AddInfrastructure();
 
-            services.AddDatabaseDeveloperPageExceptionFilter();
-
             services.AddHttpContextAccessor();
-
-            services.AddHealthChecks()
-                .AddDbContextCheck<ApplicationDbContext>();
 
             services.AddControllersWithViews(options =>
                 options.Filters.Add<ApiExceptionFilterAttribute>())
@@ -48,19 +41,9 @@ namespace Ing.Interview.WebUI
             {
                 options.SuppressModelStateInvalidFilter = true;
             });
-
-            services.AddOpenApiDocument(configure =>
+            services.AddSwaggerGen(c =>
             {
-                configure.Title = "Ing.Interview API";
-                configure.AddSecurity("JWT", Enumerable.Empty<string>(), new OpenApiSecurityScheme
-                {
-                    Type = OpenApiSecuritySchemeType.ApiKey,
-                    Name = "Authorization",
-                    In = OpenApiSecurityApiKeyLocation.Header,
-                    Description = "Type into the textbox: Bearer {your JWT token}."
-                });
-
-                configure.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("JWT"));
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Ing.Interview", Version = "v1" });
             });
         }
 
@@ -71,6 +54,8 @@ namespace Ing.Interview.WebUI
             {
                 app.UseDeveloperExceptionPage();
                 app.UseMigrationsEndPoint();
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApplicationCoreNet5 v1"));
             }
             else
             {
@@ -81,12 +66,6 @@ namespace Ing.Interview.WebUI
 
             app.UseHealthChecks("/health");
             app.UseHttpsRedirection();
-
-            app.UseSwaggerUi3(settings =>
-            {
-                settings.Path = "/api";
-                settings.DocumentPath = "/api/specification.json";
-            });
 
             app.UseRouting();
 

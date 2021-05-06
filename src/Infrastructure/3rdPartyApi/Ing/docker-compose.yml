@@ -1,0 +1,12 @@
+version: '3.4'
+
+services:
+  db:
+    # image: "microsoft/mssql-server-windows-developer"
+    image: "mcr.microsoft.com/mssql/server:2019-latest"
+    volumes: 
+        - ./Scripts/certs:/certs
+        - ./Scripts:/Scripts
+    environment:
+        SA_PASSWORD: "Your_password123"
+        ACCEPT_EULA: "Y"

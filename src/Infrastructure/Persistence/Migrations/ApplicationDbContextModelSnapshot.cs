@@ -25,13 +25,13 @@ namespace Ing.Interview.Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("AccountNumber")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Iban")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("LastModified")
@@ -61,6 +61,9 @@ namespace Ing.Interview.Infrastructure.Persistence.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
+                    b.Property<string>("AccountNumber")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal>("Amount")
                         .HasColumnType("DECIMAL(5,2)");
 
@@ -71,9 +74,6 @@ namespace Ing.Interview.Infrastructure.Persistence.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Iban")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("LastModified")

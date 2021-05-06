@@ -17,6 +17,10 @@ namespace Ing.Interview.Infrastructure
 
             services.AddTransient<IDateTime, DateTimeService>();
 
+            services.AddPersistenceHealthChecks();
+
+            services.AddDatabaseDeveloperPageExceptionFilter();
+
             return services;
         }
     }

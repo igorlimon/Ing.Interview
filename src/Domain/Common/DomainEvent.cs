@@ -5,6 +5,7 @@ namespace Ing.Interview.Domain.Common
 {
     public interface IHasDomainEvent
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public List<DomainEvent> DomainEvents { get; set; }
     }
 

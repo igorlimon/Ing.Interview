@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Ing.Interview.Application.Transactions.Queries.GetTransactionsQuery;
 
@@ -8,7 +9,7 @@ namespace Ing.Interview.WebUI.Controllers
     {
         [HttpGet]
         [Route("report")]
-        public async Task<ActionResult<GetTransactionsResult>> GetTransactionsReportWithPagination([FromQuery] GetTransactionsQuery query)
+        public async Task<ActionResult<List<TransactionItem>>> GetTransactionsReportWithPagination([FromQuery] GetTransactionsQuery query)
         {
             return await Mediator.Send(query);
         }

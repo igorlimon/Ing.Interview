@@ -14,7 +14,7 @@ namespace Ing.Interview.Infrastructure.Persistence.Migrations
                     AccountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ResourceId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Product = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Iban = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AccountNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Currency_Code = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -33,7 +33,7 @@ namespace Ing.Interview.Infrastructure.Persistence.Migrations
                 {
                     TransactionId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Iban = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AccountNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Amount = table.Column<decimal>(type: "DECIMAL(5,2)", nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: false),
                     TransactionDate = table.Column<DateTime>(type: "datetime2", nullable: false),

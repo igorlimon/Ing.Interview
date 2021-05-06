@@ -15,9 +15,10 @@ namespace Ing.Interview.Domain.Entities
         public Guid AccountId { get; set; }
         public string ResourceId { get; set; }
         public string Product { get; set; }
-        public string Iban { get; set; }
+        public string AccountNumber { get; set; }
         public string Name { get; set; }
         public Currency Currency { get; set; }
+        [System.Text.Json.Serialization.JsonIgnore]
         public List<DomainEvent> DomainEvents { get; set; }
     }
 }
