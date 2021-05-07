@@ -7,10 +7,6 @@ namespace Ing.Interview.Domain.ValueObjects
 {
     public class Currency : ValueObject
     {
-        static Currency()
-        {
-        }
-
         private Currency()
         {
         }
@@ -20,25 +16,7 @@ namespace Ing.Interview.Domain.ValueObjects
             Code = code;
         }
 
-        public static Currency From(string code)
-        {
-            var colour = new Currency { Code = code };
-
-            if (!SupportedCurrency.Contains(colour))
-            {
-                throw new UnsupportedCurrencyException(code);
-            }
-
-            return colour;
-        }
-
-        public static Currency EUR => new Currency("EUR");
-
-        public static Currency USD => new Currency("USD");
-
-        public static Currency RON => new Currency("RON");
-
-        public string Code { get; private set; }
+        public string Code { get; private init; }
 
         public static implicit operator string(Currency currency)
         {
@@ -55,6 +33,23 @@ namespace Ing.Interview.Domain.ValueObjects
             return Code;
         }
 
+        protected override IEnumerable<object> GetEqualityComponents()
+        {
+            yield return Code;
+        }
+
+        public static Currency From(string code)
+        {
+            var color = new Currency { Code = code };
+
+            if (!SupportedCurrency.Contains(color))
+            {
+                throw new UnsupportedCurrencyException(code);
+            }
+
+            return color;
+        }
+
         protected static IEnumerable<Currency> SupportedCurrency
         {
             get
@@ -65,9 +60,10 @@ namespace Ing.Interview.Domain.ValueObjects
             }
         }
 
-        protected override IEnumerable<object> GetEqualityComponents()
-        {
-            yield return Code;
-        }
+        public static Currency EUR => new("EUR");
+
+        public static Currency USD => new("USD");
+
+        public static Currency RON => new("RON");
     }
 }

@@ -9,7 +9,7 @@ namespace Ing.Interview.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         {
-            services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
+            services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>()!);
 
             services.AddScoped<IDomainEventService, DomainEventService>();
 

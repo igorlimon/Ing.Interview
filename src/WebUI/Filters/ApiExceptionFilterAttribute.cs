@@ -51,7 +51,11 @@ namespace Ing.Interview.WebUI.Filters
 
         private void HandleValidationException(ExceptionContext context)
         {
-            var exception = context.Exception as ValidationException;
+            if (!(context.Exception is ValidationException exception))
+            {
+                throw new InvalidOperationException(
+                    $"Expected to receive exception of the type {typeof(ValidationException)}");
+            }
 
             var details = new ValidationProblemDetails(exception.Errors)
             {
@@ -77,7 +81,11 @@ namespace Ing.Interview.WebUI.Filters
 
         private void HandleNotFoundException(ExceptionContext context)
         {
-            var exception = context.Exception as NotFoundException;
+            if (!(context.Exception is NotFoundException exception))
+            {
+                throw new InvalidOperationException(
+                    $"Expected to receive exception of the type {typeof(NotFoundException)}");
+            }
 
             var details = new ProblemDetails()
             {

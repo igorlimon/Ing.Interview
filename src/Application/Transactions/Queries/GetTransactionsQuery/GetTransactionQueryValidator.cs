@@ -1,9 +1,7 @@
-﻿using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Text.RegularExpressions;
 using FluentValidation;
 using Ing.Interview.Application.Common.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace Ing.Interview.Application.Transactions.Queries.GetTransactionsQuery
 {
@@ -20,13 +18,13 @@ namespace Ing.Interview.Application.Transactions.Queries.GetTransactionsQuery
                 .Must(s => 
                     !string.IsNullOrWhiteSpace(s)).WithMessage("Account Number is required.")
                 .Must(s => Regex.IsMatch(s, pattern)).WithMessage("Only alphanumeric characters are allowed.")
-                .MustAsync(BeUniqueTitle).WithMessage("Account with specified number does not exist.");
+                .Must(AccountExist).WithMessage("Account with specified number does not exist.");
         }
 
-        public async Task<bool> BeUniqueTitle(string accountNumber, CancellationToken cancellationToken)
+        public bool AccountExist(string accountNumber)
         {
-            return await _context.Accounts
-                .AnyAsync(l => l.AccountNumber == accountNumber, cancellationToken);
+            return _context.Accounts
+                .Any(l => l.AccountNumber == accountNumber);
         }
     }
 }

@@ -27,8 +27,8 @@ namespace Ing.Interview.Infrastructure.Services
 
         private INotification GetNotificationCorrespondingToDomainEvent(DomainEvent domainEvent)
         {
-            return (INotification)Activator.CreateInstance(
-                typeof(DomainEventNotification<>).MakeGenericType(domainEvent.GetType()), domainEvent);
+            return ((INotification)Activator.CreateInstance(
+                typeof(DomainEventNotification<>).MakeGenericType(domainEvent.GetType()), domainEvent)!)!;
         }
     }
 }

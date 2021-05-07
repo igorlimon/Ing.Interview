@@ -38,29 +38,11 @@ namespace Ing.Interview.Infrastructure.Persistence
         {
             return GetEnumerator();
         }
-
-        /// <inheritdoc />
-        public void AddRange(IEnumerable<T> entities)
-        {
-            _data.AddRange(entities);
-        }
-
-        /// <inheritdoc />
-        public void RemoveRange(IEnumerable<T> entities)
-        {
-            _data.RemoveRange(entities);
-        }
-
+        
         /// <inheritdoc />
         public void Add(T entity)
         {
             _data.Add(entity);
-        }
-
-        /// <inheritdoc />
-        public void Update(T entity)
-        {
-            _data.Update(entity);
         }
 
         /// <inheritdoc />

@@ -3,8 +3,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Ing.Interview.Application.Common.Interfaces;
+using Ing.Interview.Domain.Enums;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace Ing.Interview.Application.Transactions.Queries.GetTransactionsQuery
 {
@@ -15,9 +15,9 @@ namespace Ing.Interview.Application.Transactions.Queries.GetTransactionsQuery
 
     public class TransactionItem
     {
-        private TransactionItem(int category, decimal totalAmount, string currency)
+        private TransactionItem(string category, decimal totalAmount, string currency)
         {
-            CategoryName = category.ToString();
+            CategoryName = category;
             TotalAmount = totalAmount;
             Currency = currency;
         }
@@ -26,7 +26,7 @@ namespace Ing.Interview.Application.Transactions.Queries.GetTransactionsQuery
         public decimal TotalAmount { get; }
         public string Currency { get; }
 
-        public static TransactionItem From(int category, decimal totalAmount, string currency) => new TransactionItem(category, totalAmount, currency);
+        public static TransactionItem From(string category, decimal totalAmount, string currency) => new(category, totalAmount, currency);
     }
 
     public class GetTransactionsQueryHandler : IRequestHandler<GetTransactionsQuery, List<TransactionItem>>
@@ -40,18 +40,18 @@ namespace Ing.Interview.Application.Transactions.Queries.GetTransactionsQuery
             _dateTime = dateTime;
         }
 
-        public async Task<List<TransactionItem>> Handle(GetTransactionsQuery request, CancellationToken cancellationToken)
+        public Task<List<TransactionItem>> Handle(GetTransactionsQuery request, CancellationToken cancellationToken)
         {
-            var account = _context.Accounts.First(a => a.AccountNumber.Equals(request.AccountNumber));
-            var transactions = await _context.Transactions
+            var account = _context.Accounts.First(a => a.AccountNumber == request.AccountNumber);
+            var transactions = _context.Transactions
                 .Where(t => t.AccountNumber.Equals(request.AccountNumber))
                 .Where(t => t.TransactionDate >= _dateTime.Now.AddMonths(-1))
-                .ToListAsync(cancellationToken);
+                .ToList();
             var transactionsGroupedByCategory = transactions.GroupBy(t => t.CategoryId);
             var items = transactionsGroupedByCategory
-                .Select(g => TransactionItem.From(g.Key, g.Sum(i => i.Amount), account.Currency))
+                .Select(g => TransactionItem.From(((TransactionCategory)g.Key).ToString(), g.Sum(i => i.Amount), account.Currency))
                 .ToList();
-            return items;
+            return Task.FromResult(items);
         }
     }
 }

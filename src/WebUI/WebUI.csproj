@@ -4,6 +4,8 @@
 		<TargetFramework>net5.0</TargetFramework>
 		<RootNamespace>Ing.Interview.WebUI</RootNamespace>
 		<AssemblyName>Ing.Interview.WebUI</AssemblyName>
+		<nullable>enable</nullable>
+		<WarningsAsErrors>CS8600;CS8602;CS8603</WarningsAsErrors>
 		<TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
 		<TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
 		<IsPackable>true</IsPackable>

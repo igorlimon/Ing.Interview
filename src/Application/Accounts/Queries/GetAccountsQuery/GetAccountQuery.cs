@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Ing.Interview.Application.Common.Interfaces;
 using Ing.Interview.Domain.Entities;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace Ing.Interview.Application.Accounts.Queries.GetAccountsQuery
 {
@@ -23,7 +23,7 @@ namespace Ing.Interview.Application.Accounts.Queries.GetAccountsQuery
 
         public static GetAccountsResult From(List<Account> accounts)
         {
-            return new GetAccountsResult(accounts);
+            return new(accounts);
         }
     }
 
@@ -36,10 +36,10 @@ namespace Ing.Interview.Application.Accounts.Queries.GetAccountsQuery
             _context = context;
         }
 
-        public async Task<GetAccountsResult> Handle(GetAccountsQuery request, CancellationToken cancellationToken)
+        public Task<GetAccountsResult> Handle(GetAccountsQuery request, CancellationToken cancellationToken)
         {
-            var accounts = await _context.Accounts.ToListAsync(cancellationToken);
-            return GetAccountsResult.From(accounts);
+            var accounts = _context.Accounts.ToList();
+            return Task.FromResult(GetAccountsResult.From(accounts));
         }
     }
 }
